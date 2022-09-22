@@ -154,7 +154,7 @@ async function main () {
           })
         }
       }
-      core.info(`[Donky] Commit ${commit.sha} of type ${cAst.type} - ${cAst.subject} - ${commit.commit.message} -${cAst.body}`)
+      core.info(`[OK] Commit ${commit.sha} of type ${cAst.type} - ${cAst.subject}`)
     } catch (err) {
       core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format.`)
     }
@@ -183,8 +183,6 @@ async function main () {
     changes.push(useGitmojis ? `### ${type.icon} ${type.header}` : `### ${type.header}`)
     for (const commit of matchingCommits) {
       const scope = commit.scope ? `**${commit.scope}**: ` : ''
-      core.info(`${commit}`)
-      core.info(commit?.body.split('\n'))
       const subject = buildSubject({
         writeToFile,
         subject: commit.subject,
