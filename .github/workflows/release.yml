@@ -23,6 +23,7 @@ jobs:
         uses: ./
         with:
           jiraBrowseUrl: https://jira.finods.com/browse
+          jiraPrefixes: 'SL, SBKRESP, LPS'
           token: ${{ github.token }}
           tag: ${{ github.ref_name }}
 

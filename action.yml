@@ -20,6 +20,9 @@ inputs:
     description: Prepend type headers with their corresponding gitmoji
     required: false
     default: 'true'
+  jiraPrefixes:
+    description: Jira prefixes to use for issue references (e.g. SL, SBKRESP, LPS)
+    required: false
   jiraBrowseUrl:
     description: Jira browse url
     required: false

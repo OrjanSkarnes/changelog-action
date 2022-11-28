@@ -36,6 +36,7 @@ jobs:
         uses: OrjanSkarnes/changelog-action@v1
         with:
           jiraBrowseUrl: # Url to jira, e.g. "https://jira.example.com/browse"
+          jiraPrefixes: 'SL, SBKRESP, LPS'
           token: ${{ github.token }}
           tag: ${{ github.ref_name }}
 
@@ -63,6 +64,7 @@ jobs:
 * `writeToFile`: Should CHANGELOG.md be updated with latest changelog - **Optional** - Default: `true`
 * `useGitmojis`: Should type headers be prepended with their related gitmoji - **Optional** - Default: `true`
 * `jiraBrowseUrl`: Jira browse url you want the issues to be linked to  (e.g https://jira.example.com/browse ) - **Optional**
+* `jiraPrefixes: 'SL, SBKRESP, LPS`: If you want to specify which issues that should be shown **Optional (reccomended when using jiraBroserUrl)** 
 
 ## Outputs
 * `changes`: Generated CHANGELOG changes for the latest tag, without the version / date header (for use in GitHub Releases).

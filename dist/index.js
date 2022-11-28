@@ -26729,17 +26729,28 @@ function buildSubject ({ writeToFile, subject, author, authorUrl, owner, repo })
   return final
 }
 
-function getTasks({ commitMsg, jiraBrowseUrl}) {
+function getTasks({ commitMsg, jiraPrefixes, jiraBrowseUrl}) {
   let tasks = []
   let final = ""
+  let prefixes = ""
   if (commitMsg) {
     tasks = commitMsg.match(/\S[^#]*?(\d+)/g)
   }
+  if (jiraPrefixes) {
+    prefixes = jiraPrefixes.replace(/\s/g, "").split(',')
+  }
   if (tasks && tasks.length > 0) {
     tasks = tasks.map(task => task.slice(1))
-    core.info(`Tasks: ${tasks}`)
     final += "[ "
-    tasks.forEach(task => final += `[${task}](${jiraBrowseUrl}/${task}) `)
+    tasks.forEach(task => {
+      if (prefixes && prefixes.some(pre => task.includes(pre))) {
+        core.info(`Tasks with prefix: ${tasks}`)
+        final += `[${task}](${jiraBrowseUrl}/${task}) `
+      } else if (!jiraPrefixes) {
+        core.info(`Tasks: ${tasks}`)
+        final += `[${task}](${jiraBrowseUrl}/${task}) `
+      }
+    })
     final += "]"
   }
   return final
@@ -26751,12 +26762,14 @@ async function main () {
   const excludeTypes = (core.getInput('excludeTypes') || '').split(',').map(t => t.trim())
   const writeToFile = core.getBooleanInput('writeToFile')
   const useGitmojis = core.getBooleanInput('useGitmojis')
+  const jiraPrefixes = core.getInput('jiraPrefixes')
   const jiraBrowseUrl = core.getInput('jiraBrowseUrl')
   const gh = github.getOctokit(token)
   const owner = github.context.repo.owner
   const repo = github.context.repo.repo
   const currentISODate = (new Date()).toISOString().substring(0, 10)
 
+  core.info('JiraPrefixes: ' + jiraPrefixes)
   core.info('jiraBrowseUrl: ' + jiraBrowseUrl)
 
   // GET LATEST + PREVIOUS TAGS
@@ -26892,6 +26905,7 @@ async function main () {
       if (!!jiraBrowseUrl) {
         tasks = getTasks({
           commitMsg: commit.message,
+          jiraPrefixes,
           jiraBrowseUrl
         })
       }

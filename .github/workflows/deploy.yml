@@ -40,6 +40,7 @@ jobs:
         with:
           token: ${{ github.token }}
           tag: ${{ steps.semver.outputs.next }}
+          jiraPrefixes: 'SL,SBKRESP,LPS'
 
       - name: Create Release
         if: ${{ !env.ACT }}
